@@ -1,25 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React,{useState} from 'react';
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import {ThemeProvider} from 'styled-components'
+import GlobalStyles from './styles/GlobalStyles'
+import Header from './components/Header'
+import Footer from './components/Footer'
+import Profile from './pages/Profile'
+import Repo from './pages/Repo'
+
+import 'react-calendar-heatmap/dist/styles.css'
+import { ThemeName, themes } from './styles/themes';
 
 function App() {
+  const [theme,setTheme] = useState<ThemeName>('light');
+  const activeTheme = themes[theme]
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={activeTheme}>
+       <BrowserRouter >
+        <GlobalStyles />
+        <Header themeName={theme} onChangeTheme={setTheme}/>
+        <Routes>
+          <Route path="/" element={<Profile />} />
+          <Route path="/:username" element={<Profile />} />
+          <Route path="/:username/:reponame" element={<Repo />} />
+        </Routes>
+
+        <Footer />
+      </BrowserRouter>
+    </ThemeProvider>
+   
   );
 }
 
